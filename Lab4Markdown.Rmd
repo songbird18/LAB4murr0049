@@ -1,0 +1,41 @@
+---
+title: "Lab4Markdown"
+author: "Chelsea Murray 113481968"
+date: "2022-09-16"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Task 1
+
+All Lab 4 files placed in directory "C:/RPACKAGES/LAB4" on laptop. Git repository initialized and commits are pushed to "https://github.com/songbird18/LAB4murr0049.git" with version control. Files are also pushed and pulled in "C:/RPACKAGES/LAB4" on desktop PC using Github.
+
+# Task 2
+
+```{r}
+spruce.df = read.csv("SPRUCE.csv")
+tail(spruce.df)
+```
+
+I am including a couple of examples of what is written down in "mylab4.R" (see Github).
+
+```{r, eval=FALSE}
+# WRITE CODE WITH EXPLANATIONS HERE
+```
+
+# Task 3
+
+## Trendscatter Plot
+
+```{r}
+library(s20x)
+trendscatter(Height~BHDiameter,f=0.5,data=spruce.df)
+```
+
+
