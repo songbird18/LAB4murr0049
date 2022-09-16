@@ -31,11 +31,32 @@ I am including a couple of examples of what is written down in "mylab4.R" (see G
 
 # Task 3
 
-## Trendscatter Plot
+## Trendscatter Plot (Height vs. BHDiameter)
 
 ```{r}
 library(s20x)
 trendscatter(Height~BHDiameter,f=0.5,data=spruce.df)
 ```
 
+## Linear Model Plots
+
+### Residuals vs. Fitted
+
+```{r}
+spruce.lm=with(spruce.df,lm(Height~BHDiameter))
+height.res=residuals(spruce.lm)
+height.fit=fitted(spruce.lm)
+```
+
+```{r}
+plot(height.fit,height.res)
+trendscatter(height.fit,height.res)
+```
+
+The trendline of the plot is generally parabolic for the linear model, while in the original height vs. diameter plot it was similar to an exponential curve. Both plots contain 3 curves which are generally similar in shape; the dashed lines indicate +/- 1 standard deviation.
+
+```{r}
+plot(spruce.lm, which =1)
+normcheck(spruce.lm,shapiro.wilk = TRUE)
+```
 
