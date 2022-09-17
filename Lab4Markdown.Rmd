@@ -38,9 +38,9 @@ library(s20x)
 trendscatter(Height~BHDiameter,f=0.5,data=spruce.df)
 ```
 
-## Linear Model Plots
+## Linear Model
 
-### Residuals vs. Fitted
+### Residuals vs. Fitted Plots
 
 ```{r}
 spruce.lm=with(spruce.df,lm(Height~BHDiameter))
@@ -55,8 +55,130 @@ trendscatter(height.fit,height.res)
 
 The trendline of the plot is generally parabolic for the linear model, while in the original height vs. diameter plot it was similar to an exponential curve. Both plots contain 3 curves which are generally similar in shape; the dashed lines indicate +/- 1 standard deviation.
 
+### Testing Normality of Distribution
+
 ```{r}
 plot(spruce.lm, which =1)
 normcheck(spruce.lm,shapiro.wilk = TRUE)
 ```
+
+The p-value for the Shapiro-Wilk test is 0.29. The null hypothesis, which assumes the data is normally distributed, is unlikely because the p-value of this test proves there is a strong probability (95%) that the data is not normally distributed.
+
+Data in this set are spread unevenly and unpredictably; attempting to plot a line to represent the data does not guarantee accurate representation of the data.
+
+# Task 4
+
+```{r}
+quad.lm=lm(Height~BHDiameter + I(BHDiameter^2),data=spruce.df)
+plot(Height~BHDiameter,bg="Blue",pch=21,cex=1.2,
+ylim=c(0,max(Height)),xlim=c(0,max(BHDiameter)), 
+main="Spruce height prediction",data=spruce.df)
+
+myplot=function(x){
+ quad.lm$coef[1] +quad.lm$coef[2]*x  + quad.lm$coef[3]*x^2
+} 
+
+curve(myplot, lwd=2, col="steelblue",add=TRUE)
+
+quad.fit=fitted(quad.lm)
+quad.res=residuals(quad.lm)
+
+plot(quad.lm, which =1)
+
+normcheck(quad.lm,shapiro.wilk = TRUE)
+```
+
+The P-value is 0.684. Since it is over 0.5, there is a high likelihood that the data is normally distributed.
+
+# Task 5
+
+### Estimations and Predictions
+
+```{r}
+summary(quad.lm)
+```
+
+Value estimates:
+Estimated B_0 = 0.860896
+Estimated B_1 = 1.469592
+Estimated B_2 = -0.027457
+
+Interval estimates: 
+B_0: [-1.344126, 3.065918]
+B_1: [1.225806, 1.713378]
+B_2: [-0.034092, -0.020822]
+
+Equation of the fitted line:
+y=0.860896 + 1.469592x - 0.027457x^2
+
+```{r}
+predict(quad.lm, data.frame(BHDiameter=c(15,18,20)))
+```
+
+The predicted values from the equation are very, very similar:
+
+```{r}
+0.86096+(1.469592*15)-(0.027457*15*15)
+0.86096+(1.469592*18)-(0.027457*18*18)
+0.86096+(1.469592*20)-(0.027457*20*20)
+```
+
+### R Squared
+
+```{r}
+summary(quad.lm)
+summary(spruce.lm)
+```
+
+Multiple R^2 =0.7741
+Previous model =0.6569
+
+Adjusted R^2 =0.7604
+Previous model =0.6468
+
+Since the "quad" model explains ~76% of data variance, as opposed to the "spruce" model's ~65%, the "quad" model is more accurate.
+
+Multiple R^2 measures how well a linear model represents data by measuring how far data deviate from the model.
+
+The "spruce" model better explains variability in height.
+
+### Anova
+
+```{r}
+anova(spruce.lm,quad.lm)
+```
+
+TSS: 0 // 32.696
+MSS: -95.703 // -31.689
+RSS: 95.703 // 63.007
+
+MSS/TSS: undefined // -0.9692011
+
+# Task 6
+
+```{r}
+cooks20x(quad.lm)
+```
+
+The cooks distance helps to identify outliers and explore how data sets change when certain data is removed. Cooks distance is the distance of any data relative to the mean of the set.
+
+The cooks distance in this graph roughly mimics the parabola of the data set, with a couple of "spikes" at extreme points.
+
+```{r}
+quad2.lm=lm(Height~BHDiameter + I(BHDiameter^2) , data=spruce.df[-24,])
+summary(quad2.lm)
+summary(quad.lm)
+```
+
+By removing the outliers, the accuracy of the model increased (R^2 improved).
+
+# Task 7
+
+```{r}
+
+```
+
+
+
+
 
