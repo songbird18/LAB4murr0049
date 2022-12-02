@@ -174,9 +174,9 @@ By removing the outliers, the accuracy of the model increased (R^2 improved).
 
 # Task 7
 
-```{r}
+$$
 
-```
+$$
 
 
 
